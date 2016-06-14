@@ -2,7 +2,7 @@ brett.schellenberg@gmail.com
 
 Introduction
 ============
-Welcome to wordindex, a command line utility for indexing arbitrary text by word. Default output is a summary of unique words, the occurance count of each, and the list of lines the word is found in. Note that there may be fewer lines than occurances, due to a word being repeated in the same line.
+Welcome to wordindex, a command line utility for indexing arbitrary text by word. Default output is a summary of unique words, the occurance count of each, and the list of lines the word is found in. This output is sorted by occurances descending. Note that there may be fewer lines than occurances, due to a word being repeated in the same line.
 
 "Words" are defined by groups of `[A-Za-z0-9_']` characters separated by other characters.
 
@@ -81,6 +81,59 @@ Show a graph of the 25 most used words in the Declaration of Independence:
     be             : xxxxxxxx (9)
     his            : xxxxxxxx (9)
     laws           : xxxxxxxx (9)
+
+Show the word index of the lyrics to Hotel California:
+
+    > wordindex samples/california.txt
+    the: 25
+        Warm smell of colitas, rising up through the air
+        Up ahead in the distance, I saw a shimmering light
+        I had to stop for the night
+        There she stood in the doorway;
+        I heard the mission bell
+        Then she lit up a candle and she showed me the way
+        There were voices down the corridor,
+        Welcome to the Hotel California
+        Plenty of room at the Hotel California
+        Her mind is Tiffany-twisted, she got the Mercedes Benz
+        How they dance in the courtyard, sweet summer sweat.
+        So I called up the Captain,
+        Wake you up in the middle of the night
+        Welcome to the Hotel California
+        They livin' it up at the Hotel California
+        Mirrors on the ceiling,
+        The pink champagne on ice
+        And in the master's chambers,
+        They gathered for the feast
+        But they just can't kill the beast
+        Running for the door
+        I had to find the passage back
+        To the place I was before
+        "Relax, " said the night man,
+
+    a: 12
+        On a dark desert highway, cool wind in my hair
+        Up ahead in the distance, I saw a shimmering light
+        Then she lit up a candle and she showed me the way
+        Such a lovely place (Such a lovely place)
+        Such a lovely face
+        She got a lot of pretty, pretty boys she calls friends
+        Such a lovely place (Such a lovely place)
+        Such a lovely face
+        What a nice surprise (what a nice surprise)
+
+    i: 11
+        Up ahead in the distance, I saw a shimmering light
+        I had to stop for the night
+        I heard the mission bell
+        And I was thinking to myself,
+        I thought I heard them say...
+        So I called up the Captain,
+        Last thing I remember, I was
+        I had to find the passage back
+        To the place I was before
+
+    [truncated]
 
 
 Copyright
