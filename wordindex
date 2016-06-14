@@ -1,0 +1,136 @@
+#!/usr/bin/perl -w
+# brett.schellenberg@gmail.com
+#
+# Welcome to wordindex, a command line utility for indexing arbitrary text by word.
+# Use the --help option to display detailed usage information
+#
+# Required perl modules:
+# Getopt/Long.pm   CPAN      for parsing command line options
+#
+# Given the sample text:
+#   One fish, two fish,
+#   Red fish, blue fish.
+#
+# the structure of main %words hash would be:
+# %words = {
+#   'one' => [
+#      'one',
+#      '1',
+#      [
+#        'One fish, two fish,',
+#      ],
+#    ],
+#   'two' => [
+#      'two',
+#      '1',
+#      [
+#        'One fish, two fish,',
+#      ],
+#    ],
+#   'red' => [
+#      'red',
+#      '1',
+#      [
+#        'Red fish, blue fish.',
+#      ],
+#    ],
+#   'blue' => [
+#      'blue',
+#      '2',
+#      [
+#        'Red fish, blue fish.',
+#      ],
+#    ],
+#   'fish' => [
+#      'fish',
+#      '2',
+#      [
+#        'One fish, two fish,',
+#        'Red fish, blue fish.',
+#      ],
+#    ],
+#  };
+
+use strict;
+
+use Getopt::Long;
+my $normalize = 1;
+my $graphformat = 0;
+
+GetOptions(
+	"normalize|!" => \$normalize,
+	"graph-format|!" => \$graphformat,
+) or usage();
+
+sub usage {
+	print STDERR qq{Usage: $0 <filename> [options]
+ Index a file by words
+
+ <filename> 		text file to index. defaults to samples/california.txt
+
+ --normalize		normalize words by lowercasing. defaults to true.
+ --nonormalize		turns off normalizing behavior
+
+ --graph-format		changes output to be in the style of uniq -c, for piping into graph
+
+typical usage cases:
+What are the most frequently used words and their contexts?
+$0 | less
+
+Show a graph of the 25 most frequently used words.
+$0 --graph-format | graph | head -25
+};
+	exit;
+}
+
+my $filepath = $ARGV[0] || "samples/california.txt";
+
+open(FILE, "<", $filepath) or die "Can't open file $filepath: $!";
+
+my %words;
+
+while (my $line = <FILE>) {
+	#we've already split on \n, now we can strip any remaining trailing newlines or
+	#carriage returns (unix or dos line endings)
+	$line =~ s/(\r|\n)+$//;
+
+	# keep track of words we've already seen in this line so that we don't add the same
+	# line multiple times to any word's line array.
+	my %seenwords;
+
+	foreach my $word (split(/[^A-Za-z0-9_']/, $line)) {
+		next if $word eq '';
+		$word = lc($word) if $normalize;
+
+		# if the main %words hash already contains this word then just
+		# increment the word's count and add this line to the line list
+		if (exists($words{$word})) {
+			$words{$word}->[1]++;
+			push(@{$words{$word}->[2]}, $line) unless $seenwords{$word};
+		}
+		else {
+			# otherwise we need to create a new entry in the main %words hash
+			#               word, count, lines list
+			$words{$word} = [$word, 1, [$line]];
+		}
+		$seenwords{$word}++;
+	}
+}
+
+close FILE;
+
+# get a list of words sorted by occurrence count
+my @sorted_words = sort {$words{$b}->[1] <=> $words{$a}->[1]} (keys %words);
+
+foreach my $word (@sorted_words) {
+	if ($graphformat) {
+		print "$words{$word}->[1] $word\n";
+	}
+	else {
+		print "$word: $words{$word}->[1]\n";
+		foreach my $line (@{$words{$word}->[2]}) {
+			print "    $line\n";
+		}
+		print "\n";
+	}
+}
