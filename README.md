@@ -30,7 +30,7 @@ Use the --help option to display detailed usage information
 
     > wordindex --help
 
-    Usage: ./wordindex <filename> [options]
+    Usage: wordindex <filename> [options]
      Index a file by words
 
      <filename>                   text file to index. defaults to samples/california.txt
@@ -44,16 +44,17 @@ Use the --help option to display detailed usage information
 
     typical usage cases:
     What are the most frequently used words and their contexts?
-    ./wordindex | less
+    wordindex | less
 
     Show a graph of the 25 most frequently used words.
-    ./wordindex --graph-format | graph | head -25
+    wordindex --graph-format | graph | head -25
 
 
 Examples
 ========
 
 Show a graph of the 25 most used words in the Declaration of Independence:
+
     > wordindex samples/declaration.txt --graph-format | graph | head -25
     of             : xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx (78)
     the            : xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx (78)
